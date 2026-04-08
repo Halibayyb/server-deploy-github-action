@@ -5,23 +5,10 @@ const app = express();
 const PORT = 3000;
 
 // Request logging middleware
-app.use((req: Request, res: Response, next: NextFunction) => {
-  const startTime = Date.now();
-
-  res.on("finish", () => {
-    const duration = Date.now() - startTime;
-    const status = res.statusCode;
-    const method = req.method;
-    const path = req.path;
-
-    if (status >= 400) {
-      logger.error(`${method} ${path} - ${status} (${duration}ms)`);
-    } else {
-      logger.info(`${method} ${path} - ${status} (${duration}ms)`);
-    }
-  });
-
-  next();
+// Add this at the bottom of your app
+app.use((_req, res) => {
+  logger.info(`404 Not Found: ${_req.method} ${_req.originalUrl}`);
+  res.status(404).json({ error: "Not found" });
 });
 
 // Health check endpoint
@@ -33,7 +20,7 @@ app.get("/health", (req: Request, res: Response) => {
 });
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("your server is pinned");
+  res.status(200).json({"message" : "your server is pinned"});
 });
 
 app.listen(PORT, () => {
