@@ -2,14 +2,9 @@ import express, { Request, Response, NextFunction } from "express";
 import logger from "./logger";
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT;
 
-// Request logging middleware
-// Add this at the bottom of your app
-app.use((_req, res) => {
-  logger.info(`404 Not Found: ${_req.method} ${_req.originalUrl}`);
-  res.status(404).json({ error: "Not found" });
-});
+
 
 // Health check endpoint
 app.get("/health", (req: Request, res: Response) => {
@@ -21,6 +16,13 @@ app.get("/health", (req: Request, res: Response) => {
 
 app.get("/", (req: Request, res: Response) => {
   res.status(200).json({"message" : "your server is pinned"});
+});
+
+// Request logging middleware
+// Add this at the bottom of your app
+app.use((_req, res) => {
+  logger.info(`404 Not Found: ${_req.method} ${_req.originalUrl}`);
+  res.status(404).json({ error: "Not found" });
 });
 
 app.listen(PORT, () => {
