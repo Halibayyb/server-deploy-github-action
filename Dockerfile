@@ -13,17 +13,18 @@ COPY tsconfig.json ./
 # Build TypeScript
 RUN bun run build
 
-FROM oven/bun:latest
+# Runtime stage - use slim alpine-based image
+FROM oven/bun:alpine
 
 WORKDIR /app
 
 COPY package.json bun.lock ./
 
-RUN bun ci --production
+RUN bun ci --production && \
+    rm -rf /root/.bun/install/cache
 
 COPY --from=builder /app/dist ./dist
 
 EXPOSE 3000
 
-# Start the application
 CMD ["bun", "run", "dist/index.js"]
