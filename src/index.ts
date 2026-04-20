@@ -1,5 +1,6 @@
 import express, { Request, Response, NextFunction } from "express";
 import logger from "./logger";
+import cors from 'cors';
 import { connectMongo, getMongoDb } from "./db/mongo";
 
 const app = express();
@@ -7,6 +8,9 @@ const PORT = process.env.PORT;
 
 // Parse JSON request bodies
 app.use(express.json());
+
+// Use cors
+app.use(cors());
 
 const mongoStatus = connectMongo()
   .then(() => logger.info("MongoDB connection established"))
