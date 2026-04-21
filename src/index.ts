@@ -10,7 +10,11 @@ const PORT = process.env.PORT;
 app.use(express.json());
 
 // Use cors
-app.use(cors());
+app.use(cors({
+    origin: ["https://web.massive-craft.us", "http://localhost:5173", "http://localhost:4173"],
+    methods: ["GET", "POST", "OPTIONS"],
+    allowedHeaders: ["Content-Type"]
+}));
 
 const mongoStatus = connectMongo()
   .then(() => logger.info("MongoDB connection established"))
